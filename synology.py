@@ -7,12 +7,11 @@ class SynologyPhotos(object):
         self.session = requests.session()
 
 
-    def login(self, username, password, nas_name, nas_port, browse_shared_lib):
+    def login(self, username, password, nas_name, nas_port):
         self.username = username
         self.password = password
         self.nas_name = nas_name
         self.nas_port = nas_port
-        self.browse_shared_lib = (browse_shared_lib == 'true')
 
         url = f'http://{nas_name}:{nas_port}/webapi/entry.cgi'
         data = {'api':'SYNO.API.Auth',
@@ -45,20 +44,6 @@ class SynologyPhotos(object):
         return '|'+'Cookie='+quote(header)+'&'+urlencode(self.session.headers)      # also add the standard headers
 
 
-    def shared_library_populated(self):
-        url = 'http://{}:{}/webapi/entry.cgi'.format(self.nas_name, self.nas_port)
-        data = {'api':'SYNO.PhotoTeam.Browse.Timeline', 'method':'get', 'version':1}
-
-        try:
-            photos = self.session.post(url, data=data, verify=False, cookies=self.cookies, headers=self.headers).json()
-            if len(photos['data']['list']) > 0:
-                return True
-        except:
-            return False
-        
-        return False
-
-
     def get_categories(self):
         url = 'http://{}:{}/webapi/entry.cgi'.format(self.nas_name, self.nas_port)
         data = {'api':self.api+'.Browse.Category', 'method':'get', 'version':1}
@@ -69,6 +54,7 @@ class SynologyPhotos(object):
         for element in categories['data']['list']:
             temp.append(element['id'])
 
+        temp.append('shared')
         temp.append('search')
         return temp
 
@@ -79,10 +65,10 @@ class SynologyPhotos(object):
         # video and recently_added are immediately forwarded to get_photos as there are no subalbums
         params = {'api':self.api+'.Thumbnail', 'type':'"unit"', 'size':'sm', 'method':'get','version':1, 'SynoToken':self.syno_token}
         if category == 'shared_with_others':    # Depending on the category, a different request is send
-            data = {'api':self.api+'.Browse.Album', 'method':'list', 'version':1, 'limit':500, 'shared':'true', 
-                'offset':'0', 'sort_by':'create_time', 'sort_direction':'desc', 'additional':'["thumbnail"]'}
+            data = {'api':self.api+'.Browse.Album', 'method':'list', 'version':1, 'limit':500, 'category':'shared', 
+                'offset':'0', 'additional':'["thumbnail", "sharing_info"]'}
         elif category == 'shared_with_me':
-            data = {'api':self.api+'.Sharing', 'method':'list_shared_with_me', 'version':1, 'limit':500, 'offset':0, 
+            data = {'api':self.api+'.Sharing.Misc', 'method':'list_shared_with_me_album', 'version':1, 'limit':500, 'offset':0, 
                 'additional':'["thumbnail", "sharing_info"]'}
         elif category =='person':
             data = {'api':self.api+'.Browse.Person', 'method':'list', 'version':1, 'limit':500, 'offset':0, 
@@ -116,7 +102,10 @@ class SynologyPhotos(object):
                 params['cache_key'] = str(albums['data']['list'][k]['additional']['thumbnail']['cache_key'])
 
                 if 'passphrase' in albums['data']['list'][k].keys():                    # Required for shared_with_me albums
-                    params['passphrase'] = albums['data']['list'][k]['passphrase']
+                    try:
+                        params['passphrase'] = albums['data']['list'][k]['additional']['sharing_info']['passphrase']
+                    except:
+                        params['passphrase'] = albums['data']['list'][k]['passphrase']
 
                 albums['data']['list'][k]['url'] = url + '?' + urlencode(params) + kodi_header
             else:

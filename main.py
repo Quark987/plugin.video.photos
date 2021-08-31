@@ -231,8 +231,7 @@ if __name__ == '__main__':
     response = photos.login(addon.getSetting('username'),
                             addon.getSetting('password'),
                             addon.getSetting('host'),
-                            addon.getSetting('port'),
-                            addon.getSetting('shared library'))
+                            addon.getSetting('port'))
 
     if response == 'success':
         router(sys.argv[2][1:])

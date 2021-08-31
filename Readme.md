@@ -5,7 +5,6 @@ This add-on was tested on a Synology DS218+ and DS216Play NAS.
 
 Known issues:
 - When viewing videos, there is no navigation bar at the bottom. Fast forward and alike do however work. It is doubtful this will be resolved as it seems Kodi itself is having difficulties with mixed video/image content.
-- Still a problem with playback of shared videos.
 - This is a first release, if you encounter more problems, please file an issue report
 
 How to:
