@@ -6,6 +6,7 @@
 
 import sys
 import os
+import datetime as dt
 from urllib.parse import urlencode, quote, parse_qsl
 import xbmc
 import xbmcgui
@@ -101,7 +102,8 @@ def list_photos(list_id, keyword=None, passphrase=None):        # Keyword for se
         if photolist[k]['type'] == 'video':
             list_item.setProperty('IsPlayable', 'true')
             list_item.setInfo('video', {'title': photolist[k]['filename'],
-                                    'mediatype': 'video'})
+                                        'mediatype': 'video',
+                                        'date': dt.datetime.utcfromtimestamp(photolist[k]['time']).strftime("%d.%m.%Y")})
 
             try:
                 quality = photolist[k]['additional']['video_convert'][0]['quality']
@@ -112,7 +114,8 @@ def list_photos(list_id, keyword=None, passphrase=None):        # Keyword for se
 
             url = photos.get_video_url(video_id, quality)
         else:
-            list_item.setInfo('pictures', {'title':photolist[k]['filename']})
+            list_item.setInfo('pictures', {'title':photolist[k]['filename'],
+                                            'date': dt.datetime.utcfromtimestamp(photolist[k]['time']).strftime("%d.%m.%Y")})
 
             photo_cache_key = photolist[k]['additional']['thumbnail']['cache_key']
             photo_id = str(photolist[k]['additional']['thumbnail']['unit_id'])
@@ -124,7 +127,7 @@ def list_photos(list_id, keyword=None, passphrase=None):        # Keyword for se
         is_folder = False
         xbmcplugin.addDirectoryItem(_handle, url, list_item, is_folder)
     # Add a sort method for the virtual folder items (alphabetically, ignore articles)
-    # xbmcplugin.addSortMethod(_handle, xbmcplugin.SORT_METHOD_LABEL_IGNORE_THE)
+    xbmcplugin.addSortMethod(_handle, xbmcplugin.SORT_METHOD_DATE)
     # Finish creating a virtual folder.
     xbmcplugin.endOfDirectory(_handle)
 
