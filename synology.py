@@ -66,26 +66,26 @@ class SynologyPhotos(object):
         params = {'api':self.api+'.Thumbnail', 'type':'"unit"', 'size':'sm', 'method':'get','version':1, 'SynoToken':self.syno_token}
         if category == 'shared_with_others':    # Depending on the category, a different request is send
             data = {'api':self.api+'.Browse.Album', 'method':'list', 'version':1, 'limit':500, 'category':'shared', 
-                'offset':'0', 'additional':'["thumbnail", "sharing_info"]'}
+                'offset':'0', 'additional':'["thumbnail", "sharing_info"]', 'sort_direction':'desc'}
         elif category == 'shared_with_me':
             data = {'api':self.api+'.Sharing.Misc', 'method':'list_shared_with_me_album', 'version':1, 'limit':500, 'offset':0, 
-                'additional':'["thumbnail", "sharing_info"]'}
+                'additional':'["thumbnail", "sharing_info"]', 'sort_direction':'desc'}
         elif category =='person':
             data = {'api':self.api+'.Browse.Person', 'method':'list', 'version':1, 'limit':500, 'offset':0, 
-                'additional':'["thumbnail"]', 'show_hidden':'false'}
+                'additional':'["thumbnail"]', 'show_hidden':'false', 'sort_direction':'desc'}
             params = {'api':self.api+'.Thumbnail', 'type':'"person"', 'method':'get','version':1, 'SynoToken':self.syno_token}
         elif category == 'concept':
             data = {'api':self.api+'.Browse.Concept', 'method':'list', 'version':1, 'limit':500, 'offset':0, 
-                'additional':'["thumbnail"]'}
+                'additional':'["thumbnail"]', 'sort_direction':'desc'}
         elif category == 'geocoding':
             data = {'api':self.api+'.Browse.Geocoding', 'method':'list', 'version':1, 'limit':500, 'offset':0, 
-                'additional':'["thumbnail"]'}
+                'additional':'["thumbnail"]', 'sort_direction':'desc'}
         elif category == 'general_tag':
             data = {'api':self.api+'.Browse.GeneralTag', 'method':'list', 'version':1, 'limit':500, 'offset':0, 
-                'additional':'["thumbnail"]'}
+                'additional':'["thumbnail"]', 'sort_direction':'desc'}
         elif category == 'search':
             data = {'api':self.api+'.Search.Search', 'method':'list_album', 'version':1, 'limit':500, 'offset':0, 
-                'additional':'["thumbnail"]', 'keyword': keyword}
+                'additional':'["thumbnail"]', 'sort_direction':'desc', 'keyword': keyword}
         else:       # List personal albums, is not a synology category
             data = {'api':self.api+'.Browse.Album', 'method':'list', 'version':1, 'limit':500, \
                 'offset':'0', 'sort_by':'create_time', 'sort_direction':'desc', 'additional':'["thumbnail"]'}
@@ -119,19 +119,19 @@ class SynologyPhotos(object):
 
         if list_id == 'recently_added':
             data = {'api':self.api+'.Browse.RecentlyAdded', 'method':'list', 'version':1, 'limit':5000, 'offset':0, 
-                    'additional':'["thumbnail","resolution","orientation","video_convert","video_meta"]'}
+                    'additional':'["thumbnail","resolution","orientation","video_convert","video_meta"]', 'sort_direction':'desc'}
         elif list_id == 'video':
             data = {'api':self.api+'.Browse.Item', 'method':'list', 'version':1, 'limit':5000, 'offset':0, 'type':'video', 
-                'additional':'["thumbnail","resolution","orientation","video_convert","video_meta"]'}
+                'additional':'["thumbnail","resolution","orientation","video_convert","video_meta"]', 'sort_direction':'desc'}
         elif list_id == 'search':
             data = {'api':self.api+'.Search.Search', 'method':'list_item', 'version':1, 'limit':5000, 'offset':0, 'keyword':keyword, 
-                'additional':'["thumbnail","resolution","orientation","video_convert","video_meta"]'}
+                'additional':'["thumbnail","resolution","orientation","video_convert","video_meta"]', 'sort_direction':'desc'}
         elif passphrase is not None:    # shared_with_me photos
             data = {'api':self.api+'.Browse.Item', 'method':'list', 'version':1, 'limit':5000, 'passphrase':passphrase,
-                'offset':0, 'additional':'["thumbnail","resolution","orientation","video_convert","video_meta"]'}
+                'offset':0, 'additional':'["thumbnail","resolution","orientation","video_convert","video_meta"]', 'sort_direction':'desc'}
         else:
             data = {'api':self.api+'.Browse.Item', 'method':'list', 'version':1, 'limit':5000, 
-                    'offset':0, 'additional':'["thumbnail","resolution","orientation","video_convert","video_meta"]'}
+                    'offset':0, 'additional':'["thumbnail","resolution","orientation","video_convert","video_meta"]', 'sort_direction':'desc'}
 
             id_key, id_value = list_id.split('=')
             if id_key.startswith('search') or id_key.startswith('shared'):
