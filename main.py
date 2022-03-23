@@ -103,6 +103,8 @@ def list_photos(list_id, keyword=None, passphrase=None):        # Keyword for se
             list_item.setProperty('IsPlayable', 'true')
             list_item.setInfo('video', {'title': photolist[k]['filename'],
                                         'mediatype': 'video',
+                                        'count':k,
+                                        'dateadded': dt.datetime.utcfromtimestamp(photolist[k]['time']).strftime("%Y-%m-%d %H:%M:%S"),
                                         'date': dt.datetime.utcfromtimestamp(photolist[k]['time']).strftime("%d.%m.%Y")})
 
             try:
@@ -115,6 +117,7 @@ def list_photos(list_id, keyword=None, passphrase=None):        # Keyword for se
             url = photos.get_video_url(video_id, quality)
         else:
             list_item.setInfo('pictures', {'title':photolist[k]['filename'],
+                                            'count':k,
                                             'date': dt.datetime.utcfromtimestamp(photolist[k]['time']).strftime("%d.%m.%Y")})
 
             photo_cache_key = photolist[k]['additional']['thumbnail']['cache_key']
@@ -127,7 +130,10 @@ def list_photos(list_id, keyword=None, passphrase=None):        # Keyword for se
         is_folder = False
         xbmcplugin.addDirectoryItem(_handle, url, list_item, is_folder)
     # Add a sort method for the virtual folder items (alphabetically, ignore articles)
+    xbmcplugin.addSortMethod(_handle, xbmcplugin.SORT_METHOD_PROGRAM_COUNT)
+    xbmcplugin.addSortMethod(_handle, xbmcplugin.SORT_METHOD_LABEL)
     xbmcplugin.addSortMethod(_handle, xbmcplugin.SORT_METHOD_DATE)
+    xbmcplugin.addSortMethod(_handle, xbmcplugin.SORT_METHOD_DATEADDED)
     # Finish creating a virtual folder.
     xbmcplugin.endOfDirectory(_handle)
 

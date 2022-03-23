@@ -119,24 +119,25 @@ class SynologyPhotos(object):
 
         if list_id == 'recently_added':
             data = {'api':self.api+'.Browse.RecentlyAdded', 'method':'list', 'version':1, 'limit':5000, 'offset':0, 
-                    'additional':'["thumbnail","resolution","orientation","video_convert","video_meta"]', 
+                    'additional':'["thumbnail","resolution","orientation","video_convert","video_meta","provider_user_id"]', 
                     'sort_by':'takentime', 'sort_direction':'asc'}
         elif list_id == 'video':
             data = {'api':self.api+'.Browse.Item', 'method':'list', 'version':1, 'limit':5000, 'offset':0, 'type':'video', 
-                'additional':'["thumbnail","resolution","orientation","video_convert","video_meta"]', 
+                'additional':'["thumbnail","resolution","orientation","video_convert","video_meta","provider_user_id"]', 
                 'sort_by':'takentime', 'sort_direction':'asc'}
         elif list_id == 'search':
             data = {'api':self.api+'.Search.Search', 'method':'list_item', 'version':1, 'limit':5000, 'offset':0, 'keyword':keyword, 
-                'additional':'["thumbnail","resolution","orientation","video_convert","video_meta"]', 
+                'additional':'["thumbnail","resolution","orientation","video_convert","video_meta","provider_user_id"]', 
                 'sort_by':'takentime', 'sort_direction':'asc'}
         elif passphrase is not None:    # shared_with_me photos
             data = {'api':self.api+'.Browse.Item', 'method':'list', 'version':1, 'limit':5000, 'passphrase':passphrase,
-                'offset':0, 'additional':'["thumbnail","resolution","orientation","video_convert","video_meta"]', 
+                'offset':0, 'additional':'["thumbnail","resolution","orientation","video_convert","video_meta","provider_user_id"]', 
                 'sort_by':'takentime', 'sort_direction':'asc'}
         else:
             data = {'api':self.api+'.Browse.Item', 'method':'list', 'version':1, 'limit':5000, 
-                    'offset':0, 'additional':'["thumbnail","resolution","orientation","video_convert","video_meta"]', 
+                    'offset':0, 'additional':'["thumbnail","resolution","orientation","video_convert","video_meta","provider_user_id"]', 
                     'sort_by':'takentime', 'sort_direction':'asc'}
+
 
             id_key, id_value = list_id.split('=')
             if id_key.startswith('search') or id_key.startswith('shared'):
