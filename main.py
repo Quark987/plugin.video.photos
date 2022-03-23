@@ -130,9 +130,9 @@ def list_photos(list_id, keyword=None, passphrase=None):        # Keyword for se
         is_folder = False
         xbmcplugin.addDirectoryItem(_handle, url, list_item, is_folder)
     # Add a sort method for the virtual folder items (alphabetically, ignore articles)
-    xbmcplugin.addSortMethod(_handle, xbmcplugin.SORT_METHOD_PROGRAM_COUNT)
-    xbmcplugin.addSortMethod(_handle, xbmcplugin.SORT_METHOD_LABEL)
-    xbmcplugin.addSortMethod(_handle, xbmcplugin.SORT_METHOD_DATE)
+    # xbmcplugin.addSortMethod(_handle, xbmcplugin.SORT_METHOD_PROGRAM_COUNT)
+    # xbmcplugin.addSortMethod(_handle, xbmcplugin.SORT_METHOD_LABEL)
+    # xbmcplugin.addSortMethod(_handle, xbmcplugin.SORT_METHOD_DATE)
     xbmcplugin.addSortMethod(_handle, xbmcplugin.SORT_METHOD_DATEADDED)
     # Finish creating a virtual folder.
     xbmcplugin.endOfDirectory(_handle)
